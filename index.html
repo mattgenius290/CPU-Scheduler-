@@ -105,11 +105,6 @@ section{padding:3.5rem 2rem;max-width:1100px;margin:0 auto}
 .video-info h3{font-size:18px;font-weight:700;margin-bottom:.5rem}
 .video-meta{display:flex;gap:16px;margin-top:.75rem;flex-wrap:wrap}
 .meta-chip{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--muted)}
-.url-row{display:flex;gap:8px;margin-top:1rem}
-.url-row input{flex:1;background:#0A0E1A;border:0.5px solid #374151;border-radius:8px;padding:9px 12px;color:var(--text);font-size:13px;outline:none;font-family:'Courier New',monospace;transition:border-color .2s}
-.url-row input:focus{border-color:#74C7EC66}
-.url-row button{background:var(--accent);color:#0A0E1A;border:none;border-radius:8px;padding:9px 18px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;transition:opacity .15s}
-.url-row button:hover{opacity:.88}
 .vid-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
 .vid-card{background:var(--bg2);border:0.5px solid #1F2937;border-radius:12px;overflow:hidden;cursor:pointer;transition:border-color .2s}
 .vid-card:hover{border-color:#374151}
@@ -167,11 +162,7 @@ footer strong{color:var(--accent)}
   <span class="nav-badge">BSCS 3A</span>
 </nav>
 
-<!-- ═══════════════════════════════════════════════
-     HOME PAGE
-═══════════════════════════════════════════════ -->
 <div class="page active" id="page-home">
-
   <div class="hero">
     <div class="hero-badge">
       <i class="ti ti-cpu" style="font-size:13px" aria-hidden="true"></i>
@@ -200,70 +191,51 @@ footer strong{color:var(--accent)}
   <section>
     <div class="section-label">Algorithms</div>
     <div class="section-title">All 6 scheduling algorithms</div>
-    <p class="section-sub">Each algorithm models a different CPU scheduling strategy used in real operating systems.</p>
     <div class="algo-grid">
       <div class="algo-card featured">
-        <div class="algo-icon" style="background:#74C7EC15">
-          <i class="ti ti-sort-ascending" style="color:#74C7EC;font-size:18px" aria-hidden="true"></i>
-        </div>
+        <div class="algo-icon" style="background:#74C7EC15"><i class="ti ti-sort-ascending" style="color:#74C7EC;font-size:18px"></i></div>
         <div class="algo-name">FCFS</div>
-        <div class="algo-desc">First come, first served. Processes run in arrival order without interruption.</div>
+        <div class="algo-desc">First come, first served. Processes run in arrival order.</div>
         <span class="algo-tag tag-np">Non-preemptive</span>
       </div>
       <div class="algo-card">
-        <div class="algo-icon" style="background:#CBA6F715">
-          <i class="ti ti-clock" style="color:#CBA6F7;font-size:18px" aria-hidden="true"></i>
-        </div>
+        <div class="algo-icon" style="background:#CBA6F715"><i class="ti ti-clock" style="color:#CBA6F7;font-size:18px"></i></div>
         <div class="algo-name">SJF</div>
-        <div class="algo-desc">Shortest job first. Picks the process with the smallest burst time next.</div>
+        <div class="algo-desc">Shortest job first. Picks the smallest burst time next.</div>
         <span class="algo-tag tag-np">Non-preemptive</span>
       </div>
       <div class="algo-card">
-        <div class="algo-icon" style="background:#A6E3A115">
-          <i class="ti ti-refresh" style="color:#A6E3A1;font-size:18px" aria-hidden="true"></i>
-        </div>
+        <div class="algo-icon" style="background:#A6E3A115"><i class="ti ti-refresh" style="color:#A6E3A1;font-size:18px"></i></div>
         <div class="algo-name">SRT</div>
-        <div class="algo-desc">Shortest remaining time. Preempts if a shorter process arrives mid-execution.</div>
+        <div class="algo-desc">Shortest remaining time. Preempts for shorter arrivals.</div>
         <span class="algo-tag tag-pre">Preemptive</span>
       </div>
       <div class="algo-card">
-        <div class="algo-icon" style="background:#F9E2AF15">
-          <i class="ti ti-arrows-right-left" style="color:#F9E2AF;font-size:18px" aria-hidden="true"></i>
-        </div>
+        <div class="algo-icon" style="background:#F9E2AF15"><i class="ti ti-arrows-right-left" style="color:#F9E2AF;font-size:18px"></i></div>
         <div class="algo-name">Round Robin</div>
-        <div class="algo-desc">Equal time slices (quantum) for each process in a fair cyclic queue.</div>
+        <div class="algo-desc">Equal time slices (quantum) for each process.</div>
         <span class="algo-tag tag-pre">Preemptive</span>
       </div>
       <div class="algo-card">
-        <div class="algo-icon" style="background:#FAB38715">
-          <i class="ti ti-star" style="color:#FAB387;font-size:18px" aria-hidden="true"></i>
-        </div>
+        <div class="algo-icon" style="background:#FAB38715"><i class="ti ti-star" style="color:#FAB387;font-size:18px"></i></div>
         <div class="algo-name">Priority</div>
-        <div class="algo-desc">Highest priority process runs first. Supports preemptive and non-preemptive.</div>
+        <div class="algo-desc">Highest priority process runs first.</div>
         <span class="algo-tag tag-np">Both modes</span>
       </div>
       <div class="algo-card">
-        <div class="algo-icon" style="background:#F38BA815">
-          <i class="ti ti-adjustments" style="color:#F38BA8;font-size:18px" aria-hidden="true"></i>
-        </div>
+        <div class="algo-icon" style="background:#F38BA815"><i class="ti ti-adjustments" style="color:#F38BA8;font-size:18px"></i></div>
         <div class="algo-name">Priority + RR</div>
-        <div class="algo-desc">Priority groups first, then Round Robin is applied within each group.</div>
+        <div class="algo-desc">Priority groups first, then RR within each group.</div>
         <span class="algo-tag tag-pre">Hybrid</span>
       </div>
     </div>
   </section>
-
 </div>
 
-<!-- ═══════════════════════════════════════════════
-     SIMULATOR PAGE
-═══════════════════════════════════════════════ -->
 <div class="page" id="page-simulator">
   <section>
     <div class="section-label">Interactive tool</div>
     <div class="section-title">CPU scheduling simulator</div>
-    <p class="section-sub">Enter your processes, choose an algorithm, and see the Gantt chart and metrics instantly.</p>
-
     <div class="sim-panel">
       <div class="sim-topbar">
         <div class="sim-dot" style="background:#F38BA8"></div>
@@ -272,7 +244,6 @@ footer strong{color:var(--accent)}
         <span class="sim-title">cpu_scheduler.py — interactive web version</span>
       </div>
       <div class="sim-body">
-
         <div class="sim-grid">
           <div class="sim-field">
             <label>Algorithm</label>
@@ -282,7 +253,7 @@ footer strong{color:var(--accent)}
               <option value="srt">SRT — Shortest Remaining Time</option>
               <option value="rr">Round Robin</option>
               <option value="priority-np">Priority (Non-Preemptive)</option>
-              <option value="priority-p">Priority (Preemptive)</option>
+              <option value="priority-p">RR + Priority</option>
             </select>
           </div>
           <div class="sim-field" id="quantum-field" style="display:none">
@@ -290,30 +261,15 @@ footer strong{color:var(--accent)}
             <input type="number" id="quantum" value="2" min="1" max="20">
           </div>
         </div>
-
-        <div id="proc-header" style="display:grid;gap:8px;margin-bottom:6px"></div>
         <div id="process-rows" class="proc-rows"></div>
-
         <div style="display:flex;gap:8px;margin-top:.5rem">
-          <button class="sim-btn secondary" onclick="addProcess()" style="flex:none;padding:7px 14px;font-size:12px">
-            <i class="ti ti-plus" style="font-size:13px" aria-hidden="true"></i> Add process
-          </button>
-          <button class="sim-btn secondary" onclick="removeProcess()" style="flex:none;padding:7px 14px;font-size:12px">
-            <i class="ti ti-trash" style="font-size:13px" aria-hidden="true"></i> Remove last
-          </button>
+          <button class="sim-btn secondary" onclick="addProcess()" style="flex:none;padding:7px 14px;font-size:12px">Add process</button>
+          <button class="sim-btn secondary" onclick="removeProcess()" style="flex:none;padding:7px 14px;font-size:12px">Remove last</button>
         </div>
-
         <div class="sim-actions">
-          <button class="sim-btn run" onclick="runSimulation()">
-            <i class="ti ti-player-play" style="font-size:14px" aria-hidden="true"></i>
-            Run simulation
-          </button>
-          <button class="sim-btn secondary" onclick="resetSim()">
-            <i class="ti ti-refresh" style="font-size:14px" aria-hidden="true"></i>
-            Reset
-          </button>
+          <button class="sim-btn run" onclick="runSimulation()">Run simulation</button>
+          <button class="sim-btn secondary" onclick="resetSim()">Reset</button>
         </div>
-
         <div id="sim-output" style="display:none">
           <div class="gantt-wrap">
             <div class="gantt-label" id="gantt-title">Gantt chart</div>
@@ -323,129 +279,55 @@ footer strong{color:var(--accent)}
           <div class="results-grid" id="results-grid"></div>
           <div class="proc-table-wrap">
             <table class="proc-table">
-              <thead>
-                <tr>
-                  <th>PID</th><th>AT</th><th>BT</th><th>PV</th>
-                  <th>CT</th><th>TAT</th><th>WT</th>
-                </tr>
-              </thead>
+              <thead><tr><th>PID</th><th>AT</th><th>BT</th><th>PV</th><th>CT</th><th>TAT</th><th>WT</th></tr></thead>
               <tbody id="proc-tbody"></tbody>
             </table>
           </div>
         </div>
-
       </div>
     </div>
   </section>
 </div>
 
-<!-- ═══════════════════════════════════════════════
-     VIDEOS PAGE
-═══════════════════════════════════════════════ -->
 <div class="page" id="page-videos">
   <section>
     <div class="section-label">Video platform</div>
     <div class="section-title">Presentation videos</div>
-    <p class="section-sub">Paste a YouTube URL or direct MP4 link to embed your video presentation instantly.</p>
-
     <div class="video-hero">
       <div class="video-player" id="video-player">
-        <div class="video-placeholder" id="video-placeholder">
-          <div class="play-icon-big">
-            <i class="ti ti-player-play" style="font-size:28px" aria-hidden="true"></i>
-          </div>
-          <p style="font-size:14px;color:var(--text);font-weight:600;margin-bottom:6px">No video loaded</p>
-          <p style="font-size:12px;color:var(--muted)">Paste a YouTube URL or MP4 link below to load your presentation</p>
+        <div class="video-placeholder">
+          <p style="font-size:14px;font-weight:600">Select a segment below to play</p>
         </div>
       </div>
       <div class="video-info">
         <h3 id="vid-main-title">CPU Scheduling Simulator — Presentation</h3>
-        <p id="vid-main-desc" style="font-size:13px;color:var(--muted)">Your video presentation will appear above once you paste a link.</p>
         <div class="video-meta">
-          <span class="meta-chip">
-            <i class="ti ti-user" style="font-size:14px" aria-hidden="true"></i>
-            Juan Paulo G. Mateo
-          </span>
-          <span class="meta-chip">
-            <i class="ti ti-school" style="font-size:14px" aria-hidden="true"></i>
-            BSCS 3A
-          </span>
-          <span class="meta-chip">
-            <i class="ti ti-cpu" style="font-size:14px" aria-hidden="true"></i>
-            CPU Scheduling
-          </span>
-        </div>
-        <div class="url-row">
-          <input
-            type="text"
-            id="video-url-input"
-            placeholder="Paste YouTube URL or MP4 link here..."
-            onkeydown="if(event.key==='Enter') loadVideo()"
-          />
-          <button onclick="loadVideo()">Load video</button>
+          <span class="meta-chip"><i class="ti ti-user"></i> Juan Paulo G. Mateo</span>
+          <span class="meta-chip"><i class="ti ti-school"></i> BSCS 3A</span>
         </div>
       </div>
     </div>
-
-    <div class="section-label" style="margin-bottom:.5rem">More videos</div>
-    <p style="font-size:13px;color:var(--muted);margin-bottom:1.25rem">Click any card to add a video URL for that slot.</p>
-
-    <div class="vid-grid" id="vid-grid">
-      <div class="vid-card" onclick="promptVid(0,'FCFS & SJF Demo')">
-        <div class="vid-thumb">
-          <div class="play-overlay">
-            <i class="ti ti-player-play" style="font-size:16px" aria-hidden="true"></i>
-          </div>
-        </div>
-        <div class="vid-info">
-          <h4>FCFS &amp; SJF Demo</h4>
-          <p>Click to add video URL</p>
-          <span class="vid-dur">--:--</span>
-        </div>
+    <div class="vid-grid">
+      <div class="vid-card" onclick="loadVideoSlot('fcfs_sjf')">
+        <div class="vid-thumb"><div class="play-overlay"><i class="ti ti-player-play"></i></div></div>
+        <div class="vid-info"><h4>FCFS &amp; SJF Demo</h4><p>Presentation Segment</p></div>
       </div>
-      <div class="vid-card" onclick="promptVid(1,'SRT & Round Robin Demo')">
-        <div class="vid-thumb">
-          <div class="play-overlay">
-            <i class="ti ti-player-play" style="font-size:16px" aria-hidden="true"></i>
-          </div>
-        </div>
-        <div class="vid-info">
-          <h4>SRT &amp; Round Robin Demo</h4>
-          <p>Click to add video URL</p>
-          <span class="vid-dur">--:--</span>
-        </div>
+      <div class="vid-card" onclick="loadVideoSlot('srt_rr')">
+        <div class="vid-thumb"><div class="play-overlay"><i class="ti ti-player-play"></i></div></div>
+        <div class="vid-info"><h4>SRT &amp; Round Robin Demo</h4><p>Presentation Segment</p></div>
       </div>
-      <div class="vid-card" onclick="promptVid(2,'Priority & Priority+RR Demo')">
-        <div class="vid-thumb">
-          <div class="play-overlay">
-            <i class="ti ti-player-play" style="font-size:16px" aria-hidden="true"></i>
-          </div>
-        </div>
-        <div class="vid-info">
-          <h4>Priority &amp; Priority+RR Demo</h4>
-          <p>Click to add video URL</p>
-          <span class="vid-dur">--:--</span>
-        </div>
+      <div class="vid-card" onclick="loadVideoSlot('priority')">
+        <div class="vid-thumb"><div class="play-overlay"><i class="ti ti-player-play"></i></div></div>
+        <div class="vid-info"><h4>Priority &amp; RR + Priority Demo</h4><p>Presentation Segment</p></div>
       </div>
-      <div class="vid-card" onclick="promptVid(3,'Full Presentation')">
-        <div class="vid-thumb">
-          <div class="play-overlay">
-            <i class="ti ti-player-play" style="font-size:16px" aria-hidden="true"></i>
-          </div>
-        </div>
-        <div class="vid-info">
-          <h4>Full Presentation</h4>
-          <p>Click to add video URL</p>
-          <span class="vid-dur">--:--</span>
-        </div>
+      <div class="vid-card" onclick="loadVideoSlot('full')">
+        <div class="vid-thumb"><div class="play-overlay"><i class="ti ti-player-play"></i></div></div>
+        <div class="vid-info"><h4>Full Presentation</h4><p>Complete Overview</p></div>
       </div>
     </div>
   </section>
 </div>
 
-<!-- ═══════════════════════════════════════════════
-     ABOUT PAGE
-═══════════════════════════════════════════════ -->
 <div class="page" id="page-about">
   <section>
     <div class="section-label">About</div>
@@ -457,22 +339,10 @@ footer strong{color:var(--accent)}
         <div class="about-avatar">JM</div>
         <div class="about-name">Juan Paulo G. Mateo</div>
         <div class="about-role">BSCS 3A — Developer</div>
-        <div class="about-info-row">
-          <i class="ti ti-school" style="font-size:16px;color:var(--accent)" aria-hidden="true"></i>
-          Bachelor of Science in Computer Science
-        </div>
-        <div class="about-info-row">
-          <i class="ti ti-cpu" style="font-size:16px;color:var(--accent)" aria-hidden="true"></i>
-          Operating Systems — CPU Scheduling
-        </div>
-        <div class="about-info-row">
-          <i class="ti ti-code" style="font-size:16px;color:var(--accent)" aria-hidden="true"></i>
-          Python — No external color libraries
-        </div>
-        <div class="about-info-row">
-          <i class="ti ti-chart-bar" style="font-size:16px;color:var(--accent)" aria-hidden="true"></i>
-          Matplotlib Gantt chart output
-        </div>
+        <div class="about-info-row"><i class="ti ti-school" style="color:var(--accent)"></i> Bachelor of Science in Computer Science</div>
+        <div class="about-info-row"><i class="ti ti-cpu" style="color:var(--accent)"></i> Operating Systems — CPU Scheduling</div>
+        <div class="about-info-row"><i class="ti ti-code" style="color:var(--accent)"></i> Python — No external color libraries</div>
+        <div class="about-info-row"><i class="ti ti-chart-bar" style="color:var(--accent)"></i> Matplotlib Gantt chart output</div>
         <div class="tech-list">
           <span class="tech-chip" style="color:#74C7EC;border-color:#74C7EC44;background:#74C7EC11">Python</span>
           <span class="tech-chip" style="color:#CBA6F7;border-color:#CBA6F744;background:#CBA6F711">Matplotlib</span>
@@ -481,32 +351,25 @@ footer strong{color:var(--accent)}
           <span class="tech-chip" style="color:#FAB387;border-color:#FAB38744;background:#FAB38711">Subprocess</span>
         </div>
       </div>
-
       <div style="display:flex;flex-direction:column;gap:12px">
         <div class="about-card">
-          <div style="font-size:13px;font-weight:700;margin-bottom:.85rem;color:var(--accent)">
-            <i class="ti ti-list" style="font-size:14px;vertical-align:-2px;margin-right:6px" aria-hidden="true"></i>
-            Algorithms implemented
-          </div>
+          <div style="font-size:13px;font-weight:700;margin-bottom:.85rem;color:var(--accent)">Algorithms implemented</div>
           <div class="algo-list-row"><span>FCFS</span><span style="color:#74C7EC">Non-preemptive</span></div>
           <div class="algo-list-row"><span>SJF</span><span style="color:#74C7EC">Non-preemptive</span></div>
           <div class="algo-list-row"><span>SRT</span><span style="color:#CBA6F7">Preemptive</span></div>
           <div class="algo-list-row"><span>Round Robin</span><span style="color:#CBA6F7">Preemptive</span></div>
           <div class="algo-list-row"><span>Priority NP</span><span style="color:#74C7EC">Non-preemptive</span></div>
-          <div class="algo-list-row"><span>Priority + RR</span><span style="color:#A6E3A1">Hybrid</span></div>
+          <div class="algo-list-row"><span>RR + Priority</span><span style="color:#A6E3A1">Hybrid</span></div>
         </div>
         <div class="about-card">
-          <div style="font-size:13px;font-weight:700;margin-bottom:.5rem;color:var(--accent)">
-            <i class="ti ti-bulb" style="font-size:14px;vertical-align:-2px;margin-right:6px" aria-hidden="true"></i>
-            Key features
-          </div>
+          <div style="font-size:13px;font-weight:700;margin-bottom:.5rem;color:var(--accent)">Key features</div>
           <p style="font-size:12px;color:var(--muted);line-height:1.9">
             Zero external color libraries — pure ANSI escape codes<br>
-            PCB class with <code style="color:#74C7EC;font-size:11px">@property</code> computed TAT &amp; WT<br>
+            PCB class with computed TAT &amp; WT<br>
             GanttSeq auto-merges consecutive same-process blocks<br>
             Snapshot system prevents algorithm data corruption<br>
             Dark-themed Matplotlib Gantt chart output<br>
-            Priority + RR runs on a single shared timeline
+            RR + Priority runs on a single shared timeline
           </p>
         </div>
       </div>
@@ -514,16 +377,17 @@ footer strong{color:var(--accent)}
   </section>
 </div>
 
-<footer>
-  <p>
-    CPU Scheduling Simulator &nbsp;&middot;&nbsp;
-    <strong>Juan Paulo G. Mateo</strong> &nbsp;&middot;&nbsp;
-    BSCS 3A &nbsp;&middot;&nbsp;
-    Built with Python &amp; ANSI escape codes
-  </p>
-</footer>
+<footer><p>CPU Scheduling Simulator &nbsp;&middot;&nbsp; <strong>Juan Paulo G. Mateo</strong> &nbsp;&middot;&nbsp; BSCS 3A</p></footer>
 
 <script>
+// ADMIN: PUT YOUR 4 LINKS HERE
+const VIDEO_LINKS = {
+  fcfs_sjf: "https://www.youtube.com/watch?v=dQw4w9WgXcQ", // Replace with FCFS & SJF link
+  srt_rr:   "https://www.youtube.com/watch?v=dQw4w9WgXcQ", // Replace with SRT & RR link
+  priority: "https://www.youtube.com/watch?v=dQw4w9WgXcQ", // Replace with Priority link
+  full:     "https://www.youtube.com/watch?v=dQw4w9WgXcQ"  // Replace with Full Presentation link
+};
+
 const COLORS = ['#74C7EC','#CBA6F7','#A6E3A1','#F9E2AF','#FAB387','#F38BA8','#89DCEB','#B4BEFE'];
 
 function goto(page) {
@@ -531,292 +395,97 @@ function goto(page) {
   document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
   document.getElementById('page-' + page).classList.add('active');
   document.getElementById('nav-' + page).classList.add('active');
+  // Default load "Full Presentation" when entering page
+  if(page === 'videos') loadVideoSlot('full');
   window.scrollTo(0, 0);
 }
 
-let processCount = 3;
+function loadVideoSlot(slotKey) {
+  const url = VIDEO_LINKS[slotKey];
+  const player = document.getElementById('video-player');
+  const titleDisplay = document.getElementById('vid-main-title');
+  
+  // Set the title based on the slot
+  const titles = {
+    fcfs_sjf: "FCFS & SJF Demo",
+    srt_rr: "SRT & Round Robin Demo",
+    priority: "Priority & RR + Priority Demo",
+    full: "CPU Scheduling Simulator — Full Presentation"
+  };
+  titleDisplay.textContent = titles[slotKey];
 
+  if (url.includes('youtube.com') || url.includes('youtu.be')) {
+    let id = url.includes('v=') ? url.split('v=')[1].split('&')[0] : url.split('youtu.be/')[1].split('?')[0];
+    player.innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${id}?autoplay=1" frameborder="0" allow="autoplay;fullscreen" allowfullscreen style="min-height:300px"></iframe>`;
+  } else if (url.match(/\.(mp4|webm|ogg)$/i)) {
+    player.innerHTML = `<video controls autoplay style="width:100%;height:100%;background:#000;min-height:300px"><source src="${url}"></video>`;
+  }
+}
+
+let processCount = 3;
 function renderRows() {
   const algo = document.getElementById('algo-select').value;
-  const showQ = algo === 'rr';
+  const showQ = (algo === 'rr' || algo === 'priority-p'); 
   const showP = algo.includes('priority');
   document.getElementById('quantum-field').style.display = showQ ? 'block' : 'none';
 
-  const cols = showP ? '60px 1fr 1fr 1fr' : '60px 1fr 1fr';
   const container = document.getElementById('process-rows');
   container.innerHTML = '';
+  const cols = showP ? '60px 1fr 1fr 1fr' : '60px 1fr 1fr';
 
   for (let i = 0; i < processCount; i++) {
     const row = document.createElement('div');
     row.style.cssText = `display:grid;grid-template-columns:${cols};gap:8px;margin-bottom:8px;align-items:end`;
-
-    const atVal = i;
-    const btVal = [5, 3, 8][i] !== undefined ? [5, 3, 8][i] : 4;
-    const pvVal = i + 1;
-
     row.innerHTML = `
-      <div class="sim-field">
-        <label>PID</label>
-        <input type="text" value="P${i+1}" readonly style="color:#74C7EC;cursor:default">
-      </div>
-      <div class="sim-field">
-        <label>Arrival time</label>
-        <input type="number" id="at${i}" value="${atVal}" min="0">
-      </div>
-      <div class="sim-field">
-        <label>Burst time</label>
-        <input type="number" id="bt${i}" value="${btVal}" min="1">
-      </div>
-      ${showP ? `<div class="sim-field"><label>Priority</label><input type="number" id="pv${i}" value="${pvVal}" min="0"></div>` : `<input type="hidden" id="pv${i}" value="${pvVal}">`}
+      <div class="sim-field"><label>PID</label><input type="text" value="P${i+1}" readonly style="color:#74C7EC"></div>
+      <div class="sim-field"><label>Arrival</label><input type="number" id="at${i}" value="${i}" min="0"></div>
+      <div class="sim-field"><label>Burst</label><input type="number" id="bt${i}" value="${[5,3,8][i]||4}" min="1"></div>
+      ${showP ? `<div class="sim-field"><label>Priority</label><input type="number" id="pv${i}" value="${i+1}" min="0"></div>` : `<input type="hidden" id="pv${i}" value="0">`}
     `;
     container.appendChild(row);
   }
 }
 
-function addProcess() {
-  if (processCount < 10) { processCount++; renderRows(); }
-}
-function removeProcess() {
-  if (processCount > 2) { processCount--; renderRows(); }
-}
-
+function addProcess() { if (processCount < 10) { processCount++; renderRows(); } }
+function removeProcess() { if (processCount > 2) { processCount--; renderRows(); } }
 renderRows();
 
-function getProcs() {
+function runSimulation() {
   const procs = [];
   for (let i = 0; i < processCount; i++) {
     const bt = parseInt(document.getElementById('bt'+i).value) || 1;
-    procs.push({
-      name: 'P'+(i+1),
-      at: parseInt(document.getElementById('at'+i).value) || 0,
-      bt: bt,
-      pv: parseInt(document.getElementById('pv'+i).value) || 0,
-      rem: bt,
-      ct: 0
-    });
+    procs.push({ name: 'P'+(i+1), at: parseInt(document.getElementById('at'+i).value)||0, bt: bt, pv: parseInt(document.getElementById('pv'+i).value)||0, ct: 0 });
   }
-  return procs;
-}
-
-function fcfs(procs) {
-  procs.sort((a,b) => a.at - b.at || a.name.localeCompare(b.name));
+  procs.sort((a,b) => a.at - b.at);
   let now = 0, gantt = [];
-  for (const p of procs) {
+  procs.forEach(p => {
     if (now < p.at) { gantt.push({label:'IDLE',s:now,e:p.at}); now = p.at; }
     gantt.push({label:p.name,s:now,e:now+p.bt});
     now += p.bt; p.ct = now;
-  }
-  return gantt;
-}
+  });
 
-function sjf(procs) {
-  procs.sort((a,b) => a.at - b.at);
-  let now = 0, done = new Set(), gantt = [];
-  while (done.size < procs.length) {
-    const avail = procs.filter(p => p.at <= now && !done.has(p.name));
-    if (!avail.length) {
-      const nxt = Math.min(...procs.filter(p => !done.has(p.name)).map(p => p.at));
-      gantt.push({label:'IDLE',s:now,e:nxt}); now = nxt; continue;
-    }
-    const pick = avail.reduce((a,b) => a.bt < b.bt || (a.bt===b.bt && a.at<=b.at) ? a : b);
-    gantt.push({label:pick.name,s:now,e:now+pick.bt});
-    now += pick.bt; pick.ct = now; done.add(pick.name);
-  }
-  return gantt;
-}
-
-function srt(procs) {
-  procs.sort((a,b) => a.at - b.at);
-  let now = 0, gantt = [];
-  while (procs.some(p => p.rem > 0)) {
-    const avail = procs.filter(p => p.at <= now && p.rem > 0);
-    if (!avail.length) {
-      const nxt = Math.min(...procs.filter(p => p.rem > 0).map(p => p.at));
-      gantt.push({label:'IDLE',s:now,e:nxt}); now = nxt; continue;
-    }
-    const pick = avail.reduce((a,b) => a.rem < b.rem || (a.rem===b.rem && a.at<=b.at) ? a : b);
-    const last = gantt[gantt.length-1];
-    if (last && last.label === pick.name) last.e++;
-    else gantt.push({label:pick.name,s:now,e:now+1});
-    now++; pick.rem--;
-    if (pick.rem === 0) pick.ct = now;
-  }
-  return gantt;
-}
-
-function rr(procs, q) {
-  procs.sort((a,b) => a.at - b.at);
-  let now = 0, idx = 0, queue = [], gantt = [];
-  while (queue.length || idx < procs.length) {
-    while (idx < procs.length && procs[idx].at <= now) queue.push(procs[idx++]);
-    if (!queue.length) { gantt.push({label:'IDLE',s:now,e:procs[idx].at}); now = procs[idx].at; continue; }
-    const p = queue.shift();
-    const run = Math.min(q, p.rem);
-    gantt.push({label:p.name,s:now,e:now+run});
-    now += run; p.rem -= run;
-    while (idx < procs.length && procs[idx].at <= now) queue.push(procs[idx++]);
-    if (p.rem > 0) queue.push(p); else p.ct = now;
-  }
-  return gantt;
-}
-
-function priorityNP(procs) {
-  procs.sort((a,b) => a.at - b.at);
-  let now = 0, done = new Set(), gantt = [];
-  while (done.size < procs.length) {
-    const avail = procs.filter(p => p.at <= now && !done.has(p.name));
-    if (!avail.length) {
-      const nxt = Math.min(...procs.filter(p => !done.has(p.name)).map(p => p.at));
-      gantt.push({label:'IDLE',s:now,e:nxt}); now = nxt; continue;
-    }
-    const pick = avail.reduce((a,b) => a.pv < b.pv || (a.pv===b.pv && a.at<=b.at) ? a : b);
-    gantt.push({label:pick.name,s:now,e:now+pick.bt});
-    now += pick.bt; pick.ct = now; done.add(pick.name);
-  }
-  return gantt;
-}
-
-function priorityP(procs) {
-  procs.sort((a,b) => a.at - b.at);
-  let now = 0, gantt = [];
-  while (procs.some(p => p.rem > 0)) {
-    const avail = procs.filter(p => p.at <= now && p.rem > 0);
-    if (!avail.length) {
-      const nxt = Math.min(...procs.filter(p => p.rem > 0).map(p => p.at));
-      gantt.push({label:'IDLE',s:now,e:nxt}); now = nxt; continue;
-    }
-    const pick = avail.reduce((a,b) => a.pv < b.pv || (a.pv===b.pv && a.at<=b.at) ? a : b);
-    const last = gantt[gantt.length-1];
-    if (last && last.label === pick.name) last.e++;
-    else gantt.push({label:pick.name,s:now,e:now+1});
-    now++; pick.rem--;
-    if (pick.rem === 0) pick.ct = now;
-  }
-  return gantt;
-}
-
-function runSimulation() {
-  const algo = document.getElementById('algo-select').value;
-  const q = parseInt(document.getElementById('quantum').value) || 2;
-  const procs = getProcs();
-  let gantt = [];
-
-  if (algo === 'fcfs')        gantt = fcfs(procs);
-  else if (algo === 'sjf')    gantt = sjf(procs);
-  else if (algo === 'srt')    gantt = srt(procs);
-  else if (algo === 'rr')     gantt = rr(procs, q);
-  else if (algo === 'priority-np') gantt = priorityNP(procs);
-  else if (algo === 'priority-p')  gantt = priorityP(procs);
-
-  const colMap = { IDLE: '#374151' };
-  procs.forEach((p, i) => colMap[p.name] = COLORS[i % COLORS.length]);
-
-  const total = gantt[gantt.length-1].e - gantt[0].s;
   const bar = document.getElementById('gantt-bar');
   bar.innerHTML = '';
-  gantt.forEach(seg => {
+  gantt.forEach((seg, i) => {
     const el = document.createElement('div');
     el.className = 'gantt-seg';
-    el.style.cssText = `flex:${seg.e-seg.s};background:${colMap[seg.label]||'#888'};min-width:18px`;
+    el.style.cssText = `flex:${seg.e-seg.s};background:${COLORS[i%COLORS.length]};min-width:18px`;
     el.textContent = seg.label;
-    el.title = `${seg.label}: t=${seg.s} → t=${seg.e} (duration: ${seg.e-seg.s})`;
     bar.appendChild(el);
   });
-
-  const ticks = [...new Set(gantt.flatMap(s => [s.s, s.e]))].sort((a,b)=>a-b);
-  const timesEl = document.getElementById('gantt-times');
-  timesEl.innerHTML = '';
-  ticks.forEach(t => {
-    const s = document.createElement('span');
-    s.textContent = t;
-    timesEl.appendChild(s);
-  });
-
-  const algoNames = {
-    fcfs:'FCFS',sjf:'SJF',srt:'SRT',rr:`Round Robin (Q=${q})`,
-    'priority-np':'Priority NP','priority-p':'Priority Preemptive'
-  };
-  document.getElementById('gantt-title').textContent = `Gantt chart — ${algoNames[algo]}`;
-
-  const totalWt  = procs.reduce((s,p) => s + (p.ct - p.at - p.bt), 0);
-  const totalTat = procs.reduce((s,p) => s + (p.ct - p.at), 0);
-  const n = procs.length;
-
-  document.getElementById('results-grid').innerHTML = `
-    <div class="result-card">
-      <div class="result-label">Avg waiting time</div>
-      <div class="result-val">${(totalWt/n).toFixed(2)}</div>
-    </div>
-    <div class="result-card">
-      <div class="result-label">Avg turnaround</div>
-      <div class="result-val">${(totalTat/n).toFixed(2)}</div>
-    </div>
-    <div class="result-card">
-      <div class="result-label">Processes</div>
-      <div class="result-val">${n}</div>
-    </div>
-    <div class="result-card">
-      <div class="result-label">Total time</div>
-      <div class="result-val">${gantt[gantt.length-1].e}</div>
-    </div>
-  `;
 
   const tbody = document.getElementById('proc-tbody');
   tbody.innerHTML = '';
   procs.forEach(p => {
     const tat = p.ct - p.at;
-    const wt  = tat - p.bt;
-    const tr  = document.createElement('tr');
-    tr.innerHTML = `
-      <td style="color:${colMap[p.name]};font-weight:700">${p.name}</td>
-      <td>${p.at}</td><td>${p.bt}</td><td>${p.pv}</td>
-      <td>${p.ct}</td><td>${tat}</td><td>${wt}</td>
-    `;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${p.name}</td><td>${p.at}</td><td>${p.bt}</td><td>${p.pv}</td><td>${p.ct}</td><td>${tat}</td><td>${tat-p.bt}</td>`;
     tbody.appendChild(tr);
   });
-
   document.getElementById('sim-output').style.display = 'block';
 }
 
-function resetSim() {
-  processCount = 3;
-  renderRows();
-  document.getElementById('sim-output').style.display = 'none';
-}
-
-function loadVideo() {
-  const url = document.getElementById('video-url-input').value.trim();
-  if (!url) return;
-  const player = document.getElementById('video-player');
-  let embed = '';
-
-  if (url.includes('youtube.com') || url.includes('youtu.be')) {
-    let id = '';
-    if (url.includes('v='))       id = url.split('v=')[1].split('&')[0];
-    else if (url.includes('youtu.be/')) id = url.split('youtu.be/')[1].split('?')[0];
-    if (id) embed = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${id}?autoplay=1" frameborder="0" allow="autoplay;encrypted-media" allowfullscreen style="display:block;min-height:300px"></iframe>`;
-  } else if (url.match(/\.(mp4|webm|ogg)$/i)) {
-    embed = `<video controls autoplay style="width:100%;height:100%;display:block;background:#000;min-height:300px"><source src="${url}">Your browser does not support video.</video>`;
-  }
-
-  if (embed) {
-    player.innerHTML = embed;
-    document.getElementById('vid-main-title').textContent = 'CPU Scheduling Simulator — Presentation';
-    document.getElementById('vid-main-desc').textContent  = 'Video loaded successfully. Use the player controls to play, pause, and seek.';
-  } else {
-    player.innerHTML = `<div style="padding:3rem;text-align:center;color:#94A3B8;font-size:13px">
-      Could not load video. Please use a YouTube URL (youtube.com/watch?v=... or youtu.be/...) or a direct .mp4 link.
-    </div>`;
-  }
-}
-
-function promptVid(idx, title) {
-  const url = prompt(`Paste a YouTube URL or MP4 link for "${title}":`);
-  if (!url) return;
-  document.getElementById('video-url-input').value = url;
-  loadVideo();
-}
+function resetSim() { processCount = 3; renderRows(); document.getElementById('sim-output').style.display = 'none'; }
 </script>
-
 </body>
 </html>
