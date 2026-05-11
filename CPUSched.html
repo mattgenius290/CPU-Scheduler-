@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CPU Scheduling Simulator</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0A0E1A;--bg2:#111827;--bg3:#1F2937;
+  --accent:#74C7EC;--accent2:#CBA6F7;--accent3:#A6E3A1;
+  --text:#E2E8F0;--muted:#94A3B8;--border:#1F2937;
+}
+body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+a{color:inherit;text-decoration:none}
+
+/* NAV */
+nav{background:rgba(10,14,26,0.97);border-bottom:0.5px solid #1F2937;padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:56px;position:sticky;top:0;z-index:100}
+.nav-logo{display:flex;align-items:center;gap:10px;font-size:15px;font-weight:600;color:var(--accent)}
+.nav-logo-icon{width:32px;height:32px;background:#74C7EC22;border:0.5px solid #74C7EC55;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px}
+.nav-links{display:flex;gap:0;list-style:none}
+.nav-links a{padding:8px 14px;font-size:13px;color:var(--muted);border-radius:6px;cursor:pointer;transition:color .15s,background .15s}
+.nav-links a:hover,.nav-links a.active{color:var(--accent);background:#74C7EC11}
+.nav-badge{font-size:11px;background:#CBA6F733;color:#CBA6F7;padding:2px 8px;border-radius:20px;border:0.5px solid #CBA6F755}
+
+/* HERO */
+.hero{padding:5rem 2rem 4rem;text-align:center;border-bottom:0.5px solid var(--border)}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;background:#74C7EC15;color:var(--accent);border:0.5px solid #74C7EC44;border-radius:20px;padding:5px 14px;margin-bottom:1.5rem}
+.hero h1{font-size:48px;font-weight:700;line-height:1.2;margin-bottom:1rem;letter-spacing:-1px}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.hero-sub{font-size:16px;color:var(--muted);max-width:520px;margin:0 auto 2rem}
+.hero-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:3rem}
+.btn-primary{background:var(--accent);color:#0A0E1A;font-size:14px;font-weight:700;padding:10px 22px;border-radius:8px;border:none;cursor:pointer;transition:opacity .15s;display:inline-flex;align-items:center;gap:6px}
+.btn-primary:hover{opacity:0.88}
+.btn-ghost{background:transparent;color:var(--text);font-size:14px;padding:10px 22px;border-radius:8px;border:0.5px solid #374151;cursor:pointer;transition:background .15s;display:inline-flex;align-items:center;gap:6px}
+.btn-ghost:hover{background:#1F2937}
+.hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;max-width:560px;margin:0 auto;background:#1F2937;border-radius:12px;overflow:hidden;border:0.5px solid #1F2937}
+.stat{background:var(--bg2);padding:1.1rem 1rem;text-align:center}
+.stat-num{font-size:22px;font-weight:700;color:var(--accent);display:block}
+.stat-lbl{font-size:11px;color:var(--muted);margin-top:2px}
+
+/* SECTIONS */
+section{padding:3.5rem 2rem;max-width:1100px;margin:0 auto}
+.section-label{font-size:11px;font-weight:600;color:var(--accent);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.5rem}
+.section-title{font-size:26px;font-weight:700;margin-bottom:.5rem}
+.section-sub{font-size:14px;color:var(--muted);margin-bottom:2rem}
+
+/* ALGO CARDS */
+.algo-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.algo-card{background:var(--bg2);border:0.5px solid #1F2937;border-radius:12px;padding:1.1rem;transition:border-color .2s}
+.algo-card:hover{border-color:#374151}
+.algo-card.featured{border-color:#74C7EC44}
+.algo-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:.75rem}
+.algo-name{font-size:13px;font-weight:600;margin-bottom:4px}
+.algo-desc{font-size:12px;color:var(--muted);line-height:1.5}
+.algo-tag{display:inline-block;font-size:10px;padding:2px 8px;border-radius:20px;margin-top:8px}
+.tag-pre{background:#74C7EC15;color:#74C7EC;border:0.5px solid #74C7EC33}
+.tag-np{background:#CBA6F715;color:#CBA6F7;border:0.5px solid #CBA6F733}
+
+/* SIMULATOR */
+.sim-panel{background:var(--bg2);border:0.5px solid #1F2937;border-radius:16px;overflow:hidden}
+.sim-topbar{background:#0D1117;border-bottom:0.5px solid #1F2937;padding:.75rem 1.25rem;display:flex;align-items:center;gap:10px}
+.sim-dot{width:10px;height:10px;border-radius:50%}
+.sim-title{font-size:13px;color:var(--muted);font-family:'Courier New',monospace;margin-left:4px}
+.sim-body{padding:1.5rem}
+.sim-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.sim-field label{font-size:11px;color:var(--muted);display:block;margin-bottom:5px;font-weight:600;letter-spacing:.04em}
+.sim-field input,
+.sim-field select{width:100%;background:#0A0E1A;border:0.5px solid #374151;border-radius:8px;padding:8px 10px;color:var(--text);font-size:13px;font-family:'Courier New',monospace;outline:none;transition:border-color .2s}
+.sim-field input:focus,
+.sim-field select:focus{border-color:#74C7EC66}
+.sim-field select option{background:#111827}
+.proc-rows{margin-bottom:10px}
+.proc-row{display:grid;gap:8px;margin-bottom:8px}
+.sim-actions{display:flex;gap:8px;margin-top:1rem}
+.sim-btn{flex:1;padding:9px;border-radius:8px;font-size:13px;font-weight:600;border:none;cursor:pointer;transition:opacity .15s;display:inline-flex;align-items:center;justify-content:center;gap:5px}
+.sim-btn.run{background:var(--accent);color:#0A0E1A}
+.sim-btn.run:hover{opacity:.88}
+.sim-btn.secondary{background:#1F2937;color:var(--text);border:0.5px solid #374151}
+.sim-btn.secondary:hover{background:#374151}
+.gantt-wrap{margin-top:1.25rem;background:#0A0E1A;border-radius:10px;padding:1.1rem;border:0.5px solid #1F2937}
+.gantt-label{font-size:11px;color:var(--muted);margin-bottom:.75rem;font-family:'Courier New',monospace;font-weight:600;letter-spacing:.04em}
+.gantt-bar{display:flex;gap:2px;height:44px;align-items:stretch;border-radius:6px;overflow:hidden;margin-bottom:8px}
+.gantt-seg{display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#0A0E1A;border-radius:3px}
+.gantt-times{display:flex;font-size:10px;color:var(--muted);font-family:'Courier New',monospace;justify-content:space-between}
+.results-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-top:1rem}
+.result-card{background:#0A0E1A;border-radius:8px;padding:.85rem;border:0.5px solid #1F2937}
+.result-label{font-size:11px;color:var(--muted);margin-bottom:4px}
+.result-val{font-size:20px;font-weight:700;color:var(--accent3)}
+.proc-table-wrap{overflow-x:auto;margin-top:1rem}
+.proc-table{width:100%;border-collapse:collapse;font-size:12px;font-family:'Courier New',monospace}
+.proc-table th{background:#0D1117;color:var(--accent);padding:8px 12px;text-align:left;font-size:11px;font-weight:700;border-bottom:0.5px solid #1F2937;letter-spacing:.04em}
+.proc-table td{padding:8px 12px;border-bottom:0.5px solid #1F2937;color:var(--text)}
+.proc-table tr:last-child td{border-bottom:none}
+.proc-table tr:nth-child(even) td{background:#0D1117}
+
+/* VIDEO PLATFORM */
+.video-hero{background:var(--bg2);border:0.5px solid #1F2937;border-radius:16px;overflow:hidden;margin-bottom:1.5rem}
+.video-player{background:#000;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;position:relative;min-height:200px}
+.video-placeholder{text-align:center;padding:2rem}
+.play-icon-big{width:72px;height:72px;border-radius:50%;background:#74C7EC22;border:0.5px solid #74C7EC55;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;color:var(--accent)}
+.video-info{padding:1.5rem}
+.video-info h3{font-size:18px;font-weight:700;margin-bottom:.5rem}
+.video-meta{display:flex;gap:16px;margin-top:.75rem;flex-wrap:wrap}
+.meta-chip{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--muted)}
+.url-row{display:flex;gap:8px;margin-top:1rem}
+.url-row input{flex:1;background:#0A0E1A;border:0.5px solid #374151;border-radius:8px;padding:9px 12px;color:var(--text);font-size:13px;outline:none;font-family:'Courier New',monospace;transition:border-color .2s}
+.url-row input:focus{border-color:#74C7EC66}
+.url-row button{background:var(--accent);color:#0A0E1A;border:none;border-radius:8px;padding:9px 18px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;transition:opacity .15s}
+.url-row button:hover{opacity:.88}
+.vid-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.vid-card{background:var(--bg2);border:0.5px solid #1F2937;border-radius:12px;overflow:hidden;cursor:pointer;transition:border-color .2s}
+.vid-card:hover{border-color:#374151}
+.vid-thumb{aspect-ratio:16/9;background:#111827;display:flex;align-items:center;justify-content:center}
+.play-overlay{width:40px;height:40px;border-radius:50%;background:#74C7EC22;border:0.5px solid #74C7EC55;display:flex;align-items:center;justify-content:center;color:var(--accent)}
+.vid-info{padding:.85rem}
+.vid-info h4{font-size:13px;font-weight:600;margin-bottom:3px}
+.vid-info p{font-size:11px;color:var(--muted)}
+.vid-dur{font-size:10px;background:#1F2937;color:var(--muted);padding:2px 6px;border-radius:4px;display:inline-block;margin-top:5px;font-family:'Courier New',monospace}
+
+/* ABOUT */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:start}
+.about-card{background:var(--bg2);border:0.5px solid #1F2937;border-radius:12px;padding:1.5rem}
+.about-avatar{width:60px;height:60px;border-radius:50%;background:#CBA6F722;border:0.5px solid #CBA6F755;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:#CBA6F7;margin-bottom:1rem}
+.about-name{font-size:18px;font-weight:700;margin-bottom:2px}
+.about-role{font-size:12px;color:var(--muted);margin-bottom:1rem}
+.about-info-row{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);padding:6px 0;border-bottom:0.5px solid #1F2937}
+.about-info-row:last-child{border-bottom:none}
+.tech-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:1rem}
+.tech-chip{font-size:11px;padding:3px 10px;border-radius:20px;border:0.5px solid;font-weight:600}
+.algo-list-row{display:flex;justify-content:space-between;font-size:12px;padding:6px 0;border-bottom:0.5px solid #1F2937}
+.algo-list-row:last-child{border-bottom:none}
+
+/* FOOTER */
+footer{background:var(--bg2);border-top:0.5px solid #1F2937;padding:2rem;text-align:center}
+footer p{font-size:12px;color:var(--muted)}
+footer strong{color:var(--accent)}
+
+/* PAGES */
+.page{display:none}
+.page.active{display:block}
+
+@media(max-width:640px){
+  .hero h1{font-size:30px}
+  .hero-stats{grid-template-columns:repeat(2,1fr)}
+  .about-grid{grid-template-columns:1fr}
+  nav{padding:0 1rem}
+  .nav-badge{display:none}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">
+    <div class="nav-logo-icon"><i class="ti ti-cpu" aria-hidden="true"></i></div>
+    CPU Scheduler
+  </div>
+  <ul class="nav-links">
+    <li><a onclick="goto('home')" class="active" id="nav-home">Home</a></li>
+    <li><a onclick="goto('simulator')" id="nav-simulator">Simulator</a></li>
+    <li><a onclick="goto('videos')" id="nav-videos">Videos</a></li>
+    <li><a onclick="goto('about')" id="nav-about">About</a></li>
+  </ul>
+  <span class="nav-badge">BSCS 3A</span>
+</nav>
+
+<!-- ═══════════════════════════════════════════════
+     HOME PAGE
+═══════════════════════════════════════════════ -->
+<div class="page active" id="page-home">
+
+  <div class="hero">
+    <div class="hero-badge">
+      <i class="ti ti-cpu" style="font-size:13px" aria-hidden="true"></i>
+      CPU Scheduling Simulator
+    </div>
+    <h1>Visualize <em>CPU scheduling</em><br>algorithms interactively</h1>
+    <p class="hero-sub">Simulate FCFS, SJF, SRT, Round Robin, Priority, and Priority+RR with real-time Gantt charts and performance metrics.</p>
+    <div class="hero-btns">
+      <button class="btn-primary" onclick="goto('simulator')">
+        <i class="ti ti-player-play" aria-hidden="true"></i>
+        Launch simulator
+      </button>
+      <button class="btn-ghost" onclick="goto('videos')">
+        <i class="ti ti-video" aria-hidden="true"></i>
+        Watch presentation
+      </button>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><span class="stat-num">6</span><span class="stat-lbl">Algorithms</span></div>
+      <div class="stat"><span class="stat-num">∞</span><span class="stat-lbl">Processes</span></div>
+      <div class="stat"><span class="stat-num">Live</span><span class="stat-lbl">Gantt charts</span></div>
+      <div class="stat"><span class="stat-num">0</span><span class="stat-lbl">Dependencies</span></div>
+    </div>
+  </div>
+
+  <section>
+    <div class="section-label">Algorithms</div>
+    <div class="section-title">All 6 scheduling algorithms</div>
+    <p class="section-sub">Each algorithm models a different CPU scheduling strategy used in real operating systems.</p>
+    <div class="algo-grid">
+      <div class="algo-card featured">
+        <div class="algo-icon" style="background:#74C7EC15">
+          <i class="ti ti-sort-ascending" style="color:#74C7EC;font-size:18px" aria-hidden="true"></i>
+        </div>
+        <div class="algo-name">FCFS</div>
+        <div class="algo-desc">First come, first served. Processes run in arrival order without interruption.</div>
+        <span class="algo-tag tag-np">Non-preemptive</span>
+      </div>
+      <div class="algo-card">
+        <div class="algo-icon" style="background:#CBA6F715">
+          <i class="ti ti-clock" style="color:#CBA6F7;font-size:18px" aria-hidden="true"></i>
+        </div>
+        <div class="algo-name">SJF</div>
+        <div class="algo-desc">Shortest job first. Picks the process with the smallest burst time next.</div>
+        <span class="algo-tag tag-np">Non-preemptive</span>
+      </div>
+      <div class="algo-card">
+        <div class="algo-icon" style="background:#A6E3A115">
+          <i class="ti ti-refresh" style="color:#A6E3A1;font-size:18px" aria-hidden="true"></i>
+        </div>
+        <div class="algo-name">SRT</div>
+        <div class="algo-desc">Shortest remaining time. Preempts if a shorter process arrives mid-execution.</div>
+        <span class="algo-tag tag-pre">Preemptive</span>
+      </div>
+      <div class="algo-card">
+        <div class="algo-icon" style="background:#F9E2AF15">
+          <i class="ti ti-arrows-right-left" style="color:#F9E2AF;font-size:18px" aria-hidden="true"></i>
+        </div>
+        <div class="algo-name">Round Robin</div>
+        <div class="algo-desc">Equal time slices (quantum) for each process in a fair cyclic queue.</div>
+        <span class="algo-tag tag-pre">Preemptive</span>
+      </div>
+      <div class="algo-card">
+        <div class="algo-icon" style="background:#FAB38715">
+          <i class="ti ti-star" style="color:#FAB387;font-size:18px" aria-hidden="true"></i>
+        </div>
+        <div class="algo-name">Priority</div>
+        <div class="algo-desc">Highest priority process runs first. Supports preemptive and non-preemptive.</div>
+        <span class="algo-tag tag-np">Both modes</span>
+      </div>
+      <div class="algo-card">
+        <div class="algo-icon" style="background:#F38BA815">
+          <i class="ti ti-adjustments" style="color:#F38BA8;font-size:18px" aria-hidden="true"></i>
+        </div>
+        <div class="algo-name">Priority + RR</div>
+        <div class="algo-desc">Priority groups first, then Round Robin is applied within each group.</div>
+        <span class="algo-tag tag-pre">Hybrid</span>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     SIMULATOR PAGE
+═══════════════════════════════════════════════ -->
+<div class="page" id="page-simulator">
+  <section>
+    <div class="section-label">Interactive tool</div>
+    <div class="section-title">CPU scheduling simulator</div>
+    <p class="section-sub">Enter your processes, choose an algorithm, and see the Gantt chart and metrics instantly.</p>
+
+    <div class="sim-panel">
+      <div class="sim-topbar">
+        <div class="sim-dot" style="background:#F38BA8"></div>
+        <div class="sim-dot" style="background:#F9E2AF"></div>
+        <div class="sim-dot" style="background:#A6E3A1"></div>
+        <span class="sim-title">cpu_scheduler.py — interactive web version</span>
+      </div>
+      <div class="sim-body">
+
+        <div class="sim-grid">
+          <div class="sim-field">
+            <label>Algorithm</label>
+            <select id="algo-select" onchange="renderRows()">
+              <option value="fcfs">FCFS — First Come First Served</option>
+              <option value="sjf">SJF — Shortest Job First</option>
+              <option value="srt">SRT — Shortest Remaining Time</option>
+              <option value="rr">Round Robin</option>
+              <option value="priority-np">Priority (Non-Preemptive)</option>
+              <option value="priority-p">Priority (Preemptive)</option>
+            </select>
+          </div>
+          <div class="sim-field" id="quantum-field" style="display:none">
+            <label>Time quantum</label>
+            <input type="number" id="quantum" value="2" min="1" max="20">
+          </div>
+        </div>
+
+        <div id="proc-header" style="display:grid;gap:8px;margin-bottom:6px"></div>
+        <div id="process-rows" class="proc-rows"></div>
+
+        <div style="display:flex;gap:8px;margin-top:.5rem">
+          <button class="sim-btn secondary" onclick="addProcess()" style="flex:none;padding:7px 14px;font-size:12px">
+            <i class="ti ti-plus" style="font-size:13px" aria-hidden="true"></i> Add process
+          </button>
+          <button class="sim-btn secondary" onclick="removeProcess()" style="flex:none;padding:7px 14px;font-size:12px">
+            <i class="ti ti-trash" style="font-size:13px" aria-hidden="true"></i> Remove last
+          </button>
+        </div>
+
+        <div class="sim-actions">
+          <button class="sim-btn run" onclick="runSimulation()">
+            <i class="ti ti-player-play" style="font-size:14px" aria-hidden="true"></i>
+            Run simulation
+          </button>
+          <button class="sim-btn secondary" onclick="resetSim()">
+            <i class="ti ti-refresh" style="font-size:14px" aria-hidden="true"></i>
+            Reset
+          </button>
+        </div>
+
+        <div id="sim-output" style="display:none">
+          <div class="gantt-wrap">
+            <div class="gantt-label" id="gantt-title">Gantt chart</div>
+            <div class="gantt-bar" id="gantt-bar"></div>
+            <div class="gantt-times" id="gantt-times"></div>
+          </div>
+          <div class="results-grid" id="results-grid"></div>
+          <div class="proc-table-wrap">
+            <table class="proc-table">
+              <thead>
+                <tr>
+                  <th>PID</th><th>AT</th><th>BT</th><th>PV</th>
+                  <th>CT</th><th>TAT</th><th>WT</th>
+                </tr>
+              </thead>
+              <tbody id="proc-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     VIDEOS PAGE
+═══════════════════════════════════════════════ -->
+<div class="page" id="page-videos">
+  <section>
+    <div class="section-label">Video platform</div>
+    <div class="section-title">Presentation videos</div>
+    <p class="section-sub">Paste a YouTube URL or direct MP4 link to embed your video presentation instantly.</p>
+
+    <div class="video-hero">
+      <div class="video-player" id="video-player">
+        <div class="video-placeholder" id="video-placeholder">
+          <div class="play-icon-big">
+            <i class="ti ti-player-play" style="font-size:28px" aria-hidden="true"></i>
+          </div>
+          <p style="font-size:14px;color:var(--text);font-weight:600;margin-bottom:6px">No video loaded</p>
+          <p style="font-size:12px;color:var(--muted)">Paste a YouTube URL or MP4 link below to load your presentation</p>
+        </div>
+      </div>
+      <div class="video-info">
+        <h3 id="vid-main-title">CPU Scheduling Simulator — Presentation</h3>
+        <p id="vid-main-desc" style="font-size:13px;color:var(--muted)">Your video presentation will appear above once you paste a link.</p>
+        <div class="video-meta">
+          <span class="meta-chip">
+            <i class="ti ti-user" style="font-size:14px" aria-hidden="true"></i>
+            Juan Paulo G. Mateo
+          </span>
+          <span class="meta-chip">
+            <i class="ti ti-school" style="font-size:14px" aria-hidden="true"></i>
+            BSCS 3A
+          </span>
+          <span class="meta-chip">
+            <i class="ti ti-cpu" style="font-size:14px" aria-hidden="true"></i>
+            CPU Scheduling
+          </span>
+        </div>
+        <div class="url-row">
+          <input
+            type="text"
+            id="video-url-input"
+            placeholder="Paste YouTube URL or MP4 link here..."
+            onkeydown="if(event.key==='Enter') loadVideo()"
+          />
+          <button onclick="loadVideo()">Load video</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label" style="margin-bottom:.5rem">More videos</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:1.25rem">Click any card to add a video URL for that slot.</p>
+
+    <div class="vid-grid" id="vid-grid">
+      <div class="vid-card" onclick="promptVid(0,'FCFS & SJF Demo')">
+        <div class="vid-thumb">
+          <div class="play-overlay">
+            <i class="ti ti-player-play" style="font-size:16px" aria-hidden="true"></i>
+          </div>
+        </div>
+        <div class="vid-info">
+          <h4>FCFS &amp; SJF Demo</h4>
+          <p>Click to add video URL</p>
+          <span class="vid-dur">--:--</span>
+        </div>
+      </div>
+      <div class="vid-card" onclick="promptVid(1,'SRT & Round Robin Demo')">
+        <div class="vid-thumb">
+          <div class="play-overlay">
+            <i class="ti ti-player-play" style="font-size:16px" aria-hidden="true"></i>
+          </div>
+        </div>
+        <div class="vid-info">
+          <h4>SRT &amp; Round Robin Demo</h4>
+          <p>Click to add video URL</p>
+          <span class="vid-dur">--:--</span>
+        </div>
+      </div>
+      <div class="vid-card" onclick="promptVid(2,'Priority & Priority+RR Demo')">
+        <div class="vid-thumb">
+          <div class="play-overlay">
+            <i class="ti ti-player-play" style="font-size:16px" aria-hidden="true"></i>
+          </div>
+        </div>
+        <div class="vid-info">
+          <h4>Priority &amp; Priority+RR Demo</h4>
+          <p>Click to add video URL</p>
+          <span class="vid-dur">--:--</span>
+        </div>
+      </div>
+      <div class="vid-card" onclick="promptVid(3,'Full Presentation')">
+        <div class="vid-thumb">
+          <div class="play-overlay">
+            <i class="ti ti-player-play" style="font-size:16px" aria-hidden="true"></i>
+          </div>
+        </div>
+        <div class="vid-info">
+          <h4>Full Presentation</h4>
+          <p>Click to add video URL</p>
+          <span class="vid-dur">--:--</span>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     ABOUT PAGE
+═══════════════════════════════════════════════ -->
+<div class="page" id="page-about">
+  <section>
+    <div class="section-label">About</div>
+    <div class="section-title">Project information</div>
+    <p class="section-sub">CPU Scheduling Simulator built in Python with ANSI terminal UI and Matplotlib Gantt charts — zero external color libraries.</p>
+
+    <div class="about-grid">
+      <div class="about-card">
+        <div class="about-avatar">JM</div>
+        <div class="about-name">Juan Paulo G. Mateo</div>
+        <div class="about-role">BSCS 3A — Developer</div>
+        <div class="about-info-row">
+          <i class="ti ti-school" style="font-size:16px;color:var(--accent)" aria-hidden="true"></i>
+          Bachelor of Science in Computer Science
+        </div>
+        <div class="about-info-row">
+          <i class="ti ti-cpu" style="font-size:16px;color:var(--accent)" aria-hidden="true"></i>
+          Operating Systems — CPU Scheduling
+        </div>
+        <div class="about-info-row">
+          <i class="ti ti-code" style="font-size:16px;color:var(--accent)" aria-hidden="true"></i>
+          Python — No external color libraries
+        </div>
+        <div class="about-info-row">
+          <i class="ti ti-chart-bar" style="font-size:16px;color:var(--accent)" aria-hidden="true"></i>
+          Matplotlib Gantt chart output
+        </div>
+        <div class="tech-list">
+          <span class="tech-chip" style="color:#74C7EC;border-color:#74C7EC44;background:#74C7EC11">Python</span>
+          <span class="tech-chip" style="color:#CBA6F7;border-color:#CBA6F744;background:#CBA6F711">Matplotlib</span>
+          <span class="tech-chip" style="color:#A6E3A1;border-color:#A6E3A144;background:#A6E3A111">ANSI codes</span>
+          <span class="tech-chip" style="color:#F9E2AF;border-color:#F9E2AF44;background:#F9E2AF11">Collections</span>
+          <span class="tech-chip" style="color:#FAB387;border-color:#FAB38744;background:#FAB38711">Subprocess</span>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div class="about-card">
+          <div style="font-size:13px;font-weight:700;margin-bottom:.85rem;color:var(--accent)">
+            <i class="ti ti-list" style="font-size:14px;vertical-align:-2px;margin-right:6px" aria-hidden="true"></i>
+            Algorithms implemented
+          </div>
+          <div class="algo-list-row"><span>FCFS</span><span style="color:#74C7EC">Non-preemptive</span></div>
+          <div class="algo-list-row"><span>SJF</span><span style="color:#74C7EC">Non-preemptive</span></div>
+          <div class="algo-list-row"><span>SRT</span><span style="color:#CBA6F7">Preemptive</span></div>
+          <div class="algo-list-row"><span>Round Robin</span><span style="color:#CBA6F7">Preemptive</span></div>
+          <div class="algo-list-row"><span>Priority NP</span><span style="color:#74C7EC">Non-preemptive</span></div>
+          <div class="algo-list-row"><span>Priority + RR</span><span style="color:#A6E3A1">Hybrid</span></div>
+        </div>
+        <div class="about-card">
+          <div style="font-size:13px;font-weight:700;margin-bottom:.5rem;color:var(--accent)">
+            <i class="ti ti-bulb" style="font-size:14px;vertical-align:-2px;margin-right:6px" aria-hidden="true"></i>
+            Key features
+          </div>
+          <p style="font-size:12px;color:var(--muted);line-height:1.9">
+            Zero external color libraries — pure ANSI escape codes<br>
+            PCB class with <code style="color:#74C7EC;font-size:11px">@property</code> computed TAT &amp; WT<br>
+            GanttSeq auto-merges consecutive same-process blocks<br>
+            Snapshot system prevents algorithm data corruption<br>
+            Dark-themed Matplotlib Gantt chart output<br>
+            Priority + RR runs on a single shared timeline
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<footer>
+  <p>
+    CPU Scheduling Simulator &nbsp;&middot;&nbsp;
+    <strong>Juan Paulo G. Mateo</strong> &nbsp;&middot;&nbsp;
+    BSCS 3A &nbsp;&middot;&nbsp;
+    Built with Python &amp; ANSI escape codes
+  </p>
+</footer>
+
+<script>
+const COLORS = ['#74C7EC','#CBA6F7','#A6E3A1','#F9E2AF','#FAB387','#F38BA8','#89DCEB','#B4BEFE'];
+
+function goto(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  document.getElementById('nav-' + page).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+let processCount = 3;
+
+function renderRows() {
+  const algo = document.getElementById('algo-select').value;
+  const showQ = algo === 'rr';
+  const showP = algo.includes('priority');
+  document.getElementById('quantum-field').style.display = showQ ? 'block' : 'none';
+
+  const cols = showP ? '60px 1fr 1fr 1fr' : '60px 1fr 1fr';
+  const container = document.getElementById('process-rows');
+  container.innerHTML = '';
+
+  for (let i = 0; i < processCount; i++) {
+    const row = document.createElement('div');
+    row.style.cssText = `display:grid;grid-template-columns:${cols};gap:8px;margin-bottom:8px;align-items:end`;
+
+    const atVal = i;
+    const btVal = [5, 3, 8][i] !== undefined ? [5, 3, 8][i] : 4;
+    const pvVal = i + 1;
+
+    row.innerHTML = `
+      <div class="sim-field">
+        <label>PID</label>
+        <input type="text" value="P${i+1}" readonly style="color:#74C7EC;cursor:default">
+      </div>
+      <div class="sim-field">
+        <label>Arrival time</label>
+        <input type="number" id="at${i}" value="${atVal}" min="0">
+      </div>
+      <div class="sim-field">
+        <label>Burst time</label>
+        <input type="number" id="bt${i}" value="${btVal}" min="1">
+      </div>
+      ${showP ? `<div class="sim-field"><label>Priority</label><input type="number" id="pv${i}" value="${pvVal}" min="0"></div>` : `<input type="hidden" id="pv${i}" value="${pvVal}">`}
+    `;
+    container.appendChild(row);
+  }
+}
+
+function addProcess() {
+  if (processCount < 10) { processCount++; renderRows(); }
+}
+function removeProcess() {
+  if (processCount > 2) { processCount--; renderRows(); }
+}
+
+renderRows();
+
+function getProcs() {
+  const procs = [];
+  for (let i = 0; i < processCount; i++) {
+    const bt = parseInt(document.getElementById('bt'+i).value) || 1;
+    procs.push({
+      name: 'P'+(i+1),
+      at: parseInt(document.getElementById('at'+i).value) || 0,
+      bt: bt,
+      pv: parseInt(document.getElementById('pv'+i).value) || 0,
+      rem: bt,
+      ct: 0
+    });
+  }
+  return procs;
+}
+
+function fcfs(procs) {
+  procs.sort((a,b) => a.at - b.at || a.name.localeCompare(b.name));
+  let now = 0, gantt = [];
+  for (const p of procs) {
+    if (now < p.at) { gantt.push({label:'IDLE',s:now,e:p.at}); now = p.at; }
+    gantt.push({label:p.name,s:now,e:now+p.bt});
+    now += p.bt; p.ct = now;
+  }
+  return gantt;
+}
+
+function sjf(procs) {
+  procs.sort((a,b) => a.at - b.at);
+  let now = 0, done = new Set(), gantt = [];
+  while (done.size < procs.length) {
+    const avail = procs.filter(p => p.at <= now && !done.has(p.name));
+    if (!avail.length) {
+      const nxt = Math.min(...procs.filter(p => !done.has(p.name)).map(p => p.at));
+      gantt.push({label:'IDLE',s:now,e:nxt}); now = nxt; continue;
+    }
+    const pick = avail.reduce((a,b) => a.bt < b.bt || (a.bt===b.bt && a.at<=b.at) ? a : b);
+    gantt.push({label:pick.name,s:now,e:now+pick.bt});
+    now += pick.bt; pick.ct = now; done.add(pick.name);
+  }
+  return gantt;
+}
+
+function srt(procs) {
+  procs.sort((a,b) => a.at - b.at);
+  let now = 0, gantt = [];
+  while (procs.some(p => p.rem > 0)) {
+    const avail = procs.filter(p => p.at <= now && p.rem > 0);
+    if (!avail.length) {
+      const nxt = Math.min(...procs.filter(p => p.rem > 0).map(p => p.at));
+      gantt.push({label:'IDLE',s:now,e:nxt}); now = nxt; continue;
+    }
+    const pick = avail.reduce((a,b) => a.rem < b.rem || (a.rem===b.rem && a.at<=b.at) ? a : b);
+    const last = gantt[gantt.length-1];
+    if (last && last.label === pick.name) last.e++;
+    else gantt.push({label:pick.name,s:now,e:now+1});
+    now++; pick.rem--;
+    if (pick.rem === 0) pick.ct = now;
+  }
+  return gantt;
+}
+
+function rr(procs, q) {
+  procs.sort((a,b) => a.at - b.at);
+  let now = 0, idx = 0, queue = [], gantt = [];
+  while (queue.length || idx < procs.length) {
+    while (idx < procs.length && procs[idx].at <= now) queue.push(procs[idx++]);
+    if (!queue.length) { gantt.push({label:'IDLE',s:now,e:procs[idx].at}); now = procs[idx].at; continue; }
+    const p = queue.shift();
+    const run = Math.min(q, p.rem);
+    gantt.push({label:p.name,s:now,e:now+run});
+    now += run; p.rem -= run;
+    while (idx < procs.length && procs[idx].at <= now) queue.push(procs[idx++]);
+    if (p.rem > 0) queue.push(p); else p.ct = now;
+  }
+  return gantt;
+}
+
+function priorityNP(procs) {
+  procs.sort((a,b) => a.at - b.at);
+  let now = 0, done = new Set(), gantt = [];
+  while (done.size < procs.length) {
+    const avail = procs.filter(p => p.at <= now && !done.has(p.name));
+    if (!avail.length) {
+      const nxt = Math.min(...procs.filter(p => !done.has(p.name)).map(p => p.at));
+      gantt.push({label:'IDLE',s:now,e:nxt}); now = nxt; continue;
+    }
+    const pick = avail.reduce((a,b) => a.pv < b.pv || (a.pv===b.pv && a.at<=b.at) ? a : b);
+    gantt.push({label:pick.name,s:now,e:now+pick.bt});
+    now += pick.bt; pick.ct = now; done.add(pick.name);
+  }
+  return gantt;
+}
+
+function priorityP(procs) {
+  procs.sort((a,b) => a.at - b.at);
+  let now = 0, gantt = [];
+  while (procs.some(p => p.rem > 0)) {
+    const avail = procs.filter(p => p.at <= now && p.rem > 0);
+    if (!avail.length) {
+      const nxt = Math.min(...procs.filter(p => p.rem > 0).map(p => p.at));
+      gantt.push({label:'IDLE',s:now,e:nxt}); now = nxt; continue;
+    }
+    const pick = avail.reduce((a,b) => a.pv < b.pv || (a.pv===b.pv && a.at<=b.at) ? a : b);
+    const last = gantt[gantt.length-1];
+    if (last && last.label === pick.name) last.e++;
+    else gantt.push({label:pick.name,s:now,e:now+1});
+    now++; pick.rem--;
+    if (pick.rem === 0) pick.ct = now;
+  }
+  return gantt;
+}
+
+function runSimulation() {
+  const algo = document.getElementById('algo-select').value;
+  const q = parseInt(document.getElementById('quantum').value) || 2;
+  const procs = getProcs();
+  let gantt = [];
+
+  if (algo === 'fcfs')        gantt = fcfs(procs);
+  else if (algo === 'sjf')    gantt = sjf(procs);
+  else if (algo === 'srt')    gantt = srt(procs);
+  else if (algo === 'rr')     gantt = rr(procs, q);
+  else if (algo === 'priority-np') gantt = priorityNP(procs);
+  else if (algo === 'priority-p')  gantt = priorityP(procs);
+
+  const colMap = { IDLE: '#374151' };
+  procs.forEach((p, i) => colMap[p.name] = COLORS[i % COLORS.length]);
+
+  const total = gantt[gantt.length-1].e - gantt[0].s;
+  const bar = document.getElementById('gantt-bar');
+  bar.innerHTML = '';
+  gantt.forEach(seg => {
+    const el = document.createElement('div');
+    el.className = 'gantt-seg';
+    el.style.cssText = `flex:${seg.e-seg.s};background:${colMap[seg.label]||'#888'};min-width:18px`;
+    el.textContent = seg.label;
+    el.title = `${seg.label}: t=${seg.s} → t=${seg.e} (duration: ${seg.e-seg.s})`;
+    bar.appendChild(el);
+  });
+
+  const ticks = [...new Set(gantt.flatMap(s => [s.s, s.e]))].sort((a,b)=>a-b);
+  const timesEl = document.getElementById('gantt-times');
+  timesEl.innerHTML = '';
+  ticks.forEach(t => {
+    const s = document.createElement('span');
+    s.textContent = t;
+    timesEl.appendChild(s);
+  });
+
+  const algoNames = {
+    fcfs:'FCFS',sjf:'SJF',srt:'SRT',rr:`Round Robin (Q=${q})`,
+    'priority-np':'Priority NP','priority-p':'Priority Preemptive'
+  };
+  document.getElementById('gantt-title').textContent = `Gantt chart — ${algoNames[algo]}`;
+
+  const totalWt  = procs.reduce((s,p) => s + (p.ct - p.at - p.bt), 0);
+  const totalTat = procs.reduce((s,p) => s + (p.ct - p.at), 0);
+  const n = procs.length;
+
+  document.getElementById('results-grid').innerHTML = `
+    <div class="result-card">
+      <div class="result-label">Avg waiting time</div>
+      <div class="result-val">${(totalWt/n).toFixed(2)}</div>
+    </div>
+    <div class="result-card">
+      <div class="result-label">Avg turnaround</div>
+      <div class="result-val">${(totalTat/n).toFixed(2)}</div>
+    </div>
+    <div class="result-card">
+      <div class="result-label">Processes</div>
+      <div class="result-val">${n}</div>
+    </div>
+    <div class="result-card">
+      <div class="result-label">Total time</div>
+      <div class="result-val">${gantt[gantt.length-1].e}</div>
+    </div>
+  `;
+
+  const tbody = document.getElementById('proc-tbody');
+  tbody.innerHTML = '';
+  procs.forEach(p => {
+    const tat = p.ct - p.at;
+    const wt  = tat - p.bt;
+    const tr  = document.createElement('tr');
+    tr.innerHTML = `
+      <td style="color:${colMap[p.name]};font-weight:700">${p.name}</td>
+      <td>${p.at}</td><td>${p.bt}</td><td>${p.pv}</td>
+      <td>${p.ct}</td><td>${tat}</td><td>${wt}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  document.getElementById('sim-output').style.display = 'block';
+}
+
+function resetSim() {
+  processCount = 3;
+  renderRows();
+  document.getElementById('sim-output').style.display = 'none';
+}
+
+function loadVideo() {
+  const url = document.getElementById('video-url-input').value.trim();
+  if (!url) return;
+  const player = document.getElementById('video-player');
+  let embed = '';
+
+  if (url.includes('youtube.com') || url.includes('youtu.be')) {
+    let id = '';
+    if (url.includes('v='))       id = url.split('v=')[1].split('&')[0];
+    else if (url.includes('youtu.be/')) id = url.split('youtu.be/')[1].split('?')[0];
+    if (id) embed = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${id}?autoplay=1" frameborder="0" allow="autoplay;encrypted-media" allowfullscreen style="display:block;min-height:300px"></iframe>`;
+  } else if (url.match(/\.(mp4|webm|ogg)$/i)) {
+    embed = `<video controls autoplay style="width:100%;height:100%;display:block;background:#000;min-height:300px"><source src="${url}">Your browser does not support video.</video>`;
+  }
+
+  if (embed) {
+    player.innerHTML = embed;
+    document.getElementById('vid-main-title').textContent = 'CPU Scheduling Simulator — Presentation';
+    document.getElementById('vid-main-desc').textContent  = 'Video loaded successfully. Use the player controls to play, pause, and seek.';
+  } else {
+    player.innerHTML = `<div style="padding:3rem;text-align:center;color:#94A3B8;font-size:13px">
+      Could not load video. Please use a YouTube URL (youtube.com/watch?v=... or youtu.be/...) or a direct .mp4 link.
+    </div>`;
+  }
+}
+
+function promptVid(idx, title) {
+  const url = prompt(`Paste a YouTube URL or MP4 link for "${title}":`);
+  if (!url) return;
+  document.getElementById('video-url-input').value = url;
+  loadVideo();
+}
+</script>
+
+</body>
+</html>
