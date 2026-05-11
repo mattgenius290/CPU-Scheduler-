@@ -96,6 +96,13 @@ section{padding:3.5rem 2rem;max-width:1100px;margin:0 auto}
 .proc-table tr:last-child td{border-bottom:none}
 .proc-table tr:nth-child(even) td{background:#0D1117}
 
+/* NEW FORMULA SECTION */
+.formula-box { margin-top: 1.5rem; padding: 1rem; background: #0A0E1A; border: 0.5px solid #1F2937; border-radius: 10px; }
+.formula-title { font-size: 11px; font-weight: 700; color: var(--accent); text-transform: uppercase; margin-bottom: 0.5rem; letter-spacing: 0.05em; }
+.formula-row { display: flex; gap: 20px; flex-wrap: wrap; }
+.formula-item { font-family: 'Courier New', monospace; font-size: 12px; color: var(--muted); }
+.formula-item strong { color: var(--text); }
+
 /* VIDEO PLATFORM */
 .video-hero{background:var(--bg2);border:0.5px solid #1F2937;border-radius:16px;overflow:hidden;margin-bottom:1.5rem}
 .video-player{background:#000;aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;position:relative;min-height:200px}
@@ -169,7 +176,7 @@ footer strong{color:var(--accent)}
       CPU Scheduling Simulator
     </div>
     <h1>Visualize <em>CPU scheduling</em><br>algorithms interactively</h1>
-    <p class="hero-sub">Simulate FCFS, SJF, SRT, Round Robin, Priority, and Priority+RR with real-time Gantt charts and performance metrics.</p>
+    <p class="hero-sub">Simulate FCFS, SJF, SRT, Round Robin, Priority, and RR + Priority with real-time Gantt charts and performance metrics.</p>
     <div class="hero-btns">
       <button class="btn-primary" onclick="goto('simulator')">
         <i class="ti ti-player-play" aria-hidden="true"></i>
@@ -224,7 +231,7 @@ footer strong{color:var(--accent)}
       </div>
       <div class="algo-card">
         <div class="algo-icon" style="background:#F38BA815"><i class="ti ti-adjustments" style="color:#F38BA8;font-size:18px"></i></div>
-        <div class="algo-name">Priority + RR</div>
+        <div class="algo-name">RR + Priority</div>
         <div class="algo-desc">Priority groups first, then RR within each group.</div>
         <span class="algo-tag tag-pre">Hybrid</span>
       </div>
@@ -270,6 +277,7 @@ footer strong{color:var(--accent)}
           <button class="sim-btn run" onclick="runSimulation()">Run simulation</button>
           <button class="sim-btn secondary" onclick="resetSim()">Reset</button>
         </div>
+
         <div id="sim-output" style="display:none">
           <div class="gantt-wrap">
             <div class="gantt-label" id="gantt-title">Gantt chart</div>
@@ -283,7 +291,16 @@ footer strong{color:var(--accent)}
               <tbody id="proc-tbody"></tbody>
             </table>
           </div>
+
+          <div class="formula-box">
+            <div class="formula-title">Calculation Reference</div>
+            <div class="formula-row">
+              <div class="formula-item"><strong>Turnaround Time (TAT)</strong> = CT - AT</div>
+              <div class="formula-item"><strong>Waiting Time (WT)</strong> = TAT - BT</div>
+            </div>
+          </div>
         </div>
+        
       </div>
     </div>
   </section>
@@ -380,12 +397,12 @@ footer strong{color:var(--accent)}
 <footer><p>CPU Scheduling Simulator &nbsp;&middot;&nbsp; <strong>Juan Paulo G. Mateo</strong> &nbsp;&middot;&nbsp; BSCS 3A</p></footer>
 
 <script>
-// ADMIN: PUT YOUR 4 LINKS HERE
+// ADMIN: Change links here
 const VIDEO_LINKS = {
-  fcfs_sjf: "https://www.youtube.com/watch?v=dQw4w9WgXcQ", // Replace with FCFS & SJF link
-  srt_rr:   "https://www.youtube.com/watch?v=dQw4w9WgXcQ", // Replace with SRT & RR link
-  priority: "https://www.youtube.com/watch?v=dQw4w9WgXcQ", // Replace with Priority link
-  full:     "https://www.youtube.com/watch?v=dQw4w9WgXcQ"  // Replace with Full Presentation link
+  fcfs_sjf: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+  srt_rr:   "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+  priority: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+  full:     "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
 };
 
 const COLORS = ['#74C7EC','#CBA6F7','#A6E3A1','#F9E2AF','#FAB387','#F38BA8','#89DCEB','#B4BEFE'];
@@ -395,7 +412,6 @@ function goto(page) {
   document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
   document.getElementById('page-' + page).classList.add('active');
   document.getElementById('nav-' + page).classList.add('active');
-  // Default load "Full Presentation" when entering page
   if(page === 'videos') loadVideoSlot('full');
   window.scrollTo(0, 0);
 }
@@ -403,22 +419,11 @@ function goto(page) {
 function loadVideoSlot(slotKey) {
   const url = VIDEO_LINKS[slotKey];
   const player = document.getElementById('video-player');
-  const titleDisplay = document.getElementById('vid-main-title');
-  
-  // Set the title based on the slot
-  const titles = {
-    fcfs_sjf: "FCFS & SJF Demo",
-    srt_rr: "SRT & Round Robin Demo",
-    priority: "Priority & RR + Priority Demo",
-    full: "CPU Scheduling Simulator — Full Presentation"
-  };
-  titleDisplay.textContent = titles[slotKey];
-
+  const titles = { fcfs_sjf: "FCFS & SJF Demo", srt_rr: "SRT & Round Robin Demo", priority: "Priority & RR + Priority Demo", full: "Full Presentation" };
+  document.getElementById('vid-main-title').textContent = titles[slotKey];
   if (url.includes('youtube.com') || url.includes('youtu.be')) {
     let id = url.includes('v=') ? url.split('v=')[1].split('&')[0] : url.split('youtu.be/')[1].split('?')[0];
-    player.innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${id}?autoplay=1" frameborder="0" allow="autoplay;fullscreen" allowfullscreen style="min-height:300px"></iframe>`;
-  } else if (url.match(/\.(mp4|webm|ogg)$/i)) {
-    player.innerHTML = `<video controls autoplay style="width:100%;height:100%;background:#000;min-height:300px"><source src="${url}"></video>`;
+    player.innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${id}?autoplay=1" frameborder="0" allowfullscreen style="min-height:300px"></iframe>`;
   }
 }
 
@@ -428,20 +433,13 @@ function renderRows() {
   const showQ = (algo === 'rr' || algo === 'priority-p'); 
   const showP = algo.includes('priority');
   document.getElementById('quantum-field').style.display = showQ ? 'block' : 'none';
-
   const container = document.getElementById('process-rows');
   container.innerHTML = '';
   const cols = showP ? '60px 1fr 1fr 1fr' : '60px 1fr 1fr';
-
   for (let i = 0; i < processCount; i++) {
     const row = document.createElement('div');
     row.style.cssText = `display:grid;grid-template-columns:${cols};gap:8px;margin-bottom:8px;align-items:end`;
-    row.innerHTML = `
-      <div class="sim-field"><label>PID</label><input type="text" value="P${i+1}" readonly style="color:#74C7EC"></div>
-      <div class="sim-field"><label>Arrival</label><input type="number" id="at${i}" value="${i}" min="0"></div>
-      <div class="sim-field"><label>Burst</label><input type="number" id="bt${i}" value="${[5,3,8][i]||4}" min="1"></div>
-      ${showP ? `<div class="sim-field"><label>Priority</label><input type="number" id="pv${i}" value="${i+1}" min="0"></div>` : `<input type="hidden" id="pv${i}" value="0">`}
-    `;
+    row.innerHTML = `<div class="sim-field"><label>PID</label><input type="text" value="P${i+1}" readonly style="color:#74C7EC"></div><div class="sim-field"><label>Arrival</label><input type="number" id="at${i}" value="${i}" min="0"></div><div class="sim-field"><label>Burst</label><input type="number" id="bt${i}" value="${[5,3,8][i]||4}" min="1"></div>${showP ? `<div class="sim-field"><label>Priority</label><input type="number" id="pv${i}" value="${i+1}" min="0"></div>` : `<input type="hidden" id="pv${i}" value="0">`}`;
     container.appendChild(row);
   }
 }
