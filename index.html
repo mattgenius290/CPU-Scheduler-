@@ -96,12 +96,15 @@ section{padding:3.5rem 2rem;max-width:1100px;margin:0 auto}
 .proc-table tr:last-child td{border-bottom:none}
 .proc-table tr:nth-child(even) td{background:#0D1117}
 
-/* NEW FORMULA SECTION */
-.formula-box { margin-top: 1.5rem; padding: 1rem; background: #0A0E1A; border: 0.5px solid #1F2937; border-radius: 10px; }
-.formula-title { font-size: 11px; font-weight: 700; color: var(--accent); text-transform: uppercase; margin-bottom: 0.5rem; letter-spacing: 0.05em; }
-.formula-row { display: flex; gap: 20px; flex-wrap: wrap; }
-.formula-item { font-family: 'Courier New', monospace; font-size: 12px; color: var(--muted); }
-.formula-item strong { color: var(--text); }
+/* AVERAGE RESULTS BOX */
+.avg-box { margin-top: 1.5rem; background: #0A0E1A; border: 0.5px solid #1F2937; border-radius: 10px; overflow: hidden; }
+.avg-box-title { font-size: 11px; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 0.05em; padding: 0.75rem 1rem; border-bottom: 0.5px solid #1F2937; background: #0D1117; }
+.avg-box-grid { display: grid; grid-template-columns: 1fr 1fr; }
+.avg-box-item { padding: 1rem 1.25rem; }
+.avg-box-item:first-child { border-right: 0.5px solid #1F2937; }
+.avg-box-label { font-size: 11px; color: var(--muted); margin-bottom: 4px; font-family: 'Courier New', monospace; font-weight: 600; letter-spacing: 0.04em; }
+.avg-box-value { font-size: 28px; font-weight: 700; color: var(--accent3); line-height: 1; }
+.avg-box-unit { font-size: 11px; color: var(--muted); margin-top: 4px; }
 
 /* VIDEO PLATFORM */
 .video-hero{background:var(--bg2);border:0.5px solid #1F2937;border-radius:16px;overflow:hidden;margin-bottom:1.5rem}
@@ -292,14 +295,21 @@ footer strong{color:var(--accent)}
             </table>
           </div>
 
-          <div class="formula-box">
-            <div class="formula-title">Calculation Reference</div>
-            <div class="formula-row">
-              <div class="formula-item"><strong>Turnaround Time (TAT)</strong> = CT - AT</div>
-              <div class="formula-item"><strong>Waiting Time (WT)</strong> = TAT - BT</div>
-            </div>
-          </div>
-        </div>
+<div class="avg-box">
+  <div class="avg-box-title">Average Results</div>
+  <div class="avg-box-grid">
+    <div class="avg-box-item">
+      <div class="avg-box-label">Average Turnaround Time (TAT)</div>
+      <div class="avg-box-value" id="avg-tat">—</div>
+      <div class="avg-box-unit">time units</div>
+    </div>
+    <div class="avg-box-item">
+      <div class="avg-box-label">Average Waiting Time (WT)</div>
+      <div class="avg-box-value" id="avg-wt">—</div>
+      <div class="avg-box-unit">time units</div>
+    </div>
+  </div>
+</div>
         
       </div>
     </div>
@@ -452,8 +462,15 @@ function runSimulation() {
   const procs = [];
   for (let i = 0; i < processCount; i++) {
     const bt = parseInt(document.getElementById('bt'+i).value) || 1;
-    procs.push({ name: 'P'+(i+1), at: parseInt(document.getElementById('at'+i).value)||0, bt: bt, pv: parseInt(document.getElementById('pv'+i).value)||0, ct: 0 });
+    procs.push({
+      name: 'P'+(i+1),
+      at: parseInt(document.getElementById('at'+i).value)||0,
+      bt: bt,
+      pv: parseInt(document.getElementById('pv'+i).value)||0,
+      ct: 0
+    });
   }
+
   procs.sort((a,b) => a.at - b.at);
   let now = 0, gantt = [];
   procs.forEach(p => {
@@ -462,24 +479,58 @@ function runSimulation() {
     now += p.bt; p.ct = now;
   });
 
+  const colMap = { IDLE: '#374151' };
+  procs.forEach((p,i) => colMap[p.name] = COLORS[i % COLORS.length]);
+
   const bar = document.getElementById('gantt-bar');
   bar.innerHTML = '';
-  gantt.forEach((seg, i) => {
+  gantt.forEach(seg => {
     const el = document.createElement('div');
     el.className = 'gantt-seg';
-    el.style.cssText = `flex:${seg.e-seg.s};background:${COLORS[i%COLORS.length]};min-width:18px`;
+    el.style.cssText = `flex:${seg.e-seg.s};background:${colMap[seg.label]||'#888'};min-width:18px`;
     el.textContent = seg.label;
+    el.title = `${seg.label}: t=${seg.s} → t=${seg.e}`;
     bar.appendChild(el);
   });
 
+  const ticks = [...new Set(gantt.flatMap(s=>[s.s,s.e]))].sort((a,b)=>a-b);
+  const timesEl = document.getElementById('gantt-times');
+  timesEl.innerHTML = '';
+  ticks.forEach(t => {
+    const s = document.createElement('span');
+    s.textContent = t;
+    timesEl.appendChild(s);
+  });
+
+  // ── Build table + calculate totals ──
   const tbody = document.getElementById('proc-tbody');
   tbody.innerHTML = '';
+  let totalTat = 0, totalWt = 0;
+
   procs.forEach(p => {
     const tat = p.ct - p.at;
+    const wt  = tat - p.bt;
+    totalTat += tat;
+    totalWt  += wt;
     const tr = document.createElement('tr');
-    tr.innerHTML = `<td>${p.name}</td><td>${p.at}</td><td>${p.bt}</td><td>${p.pv}</td><td>${p.ct}</td><td>${tat}</td><td>${tat-p.bt}</td>`;
+    tr.innerHTML = `
+      <td style="color:${colMap[p.name]};font-weight:700">${p.name}</td>
+      <td>${p.at}</td>
+      <td>${p.bt}</td>
+      <td>${p.pv}</td>
+      <td>${p.ct}</td>
+      <td>${tat}</td>
+      <td>${wt}</td>
+    `;
     tbody.appendChild(tr);
   });
+
+  const n = procs.length;
+
+  // ── Show computed averages ──
+  document.getElementById('avg-tat').textContent = (totalTat / n).toFixed(2);
+  document.getElementById('avg-wt').textContent  = (totalWt  / n).toFixed(2);
+
   document.getElementById('sim-output').style.display = 'block';
 }
 
